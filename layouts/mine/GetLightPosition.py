@@ -1,5 +1,6 @@
 
 #coding:utf8
+#获取场景中的灯光 位置 用于unity中组装
 import os
 import sys
 import codecs

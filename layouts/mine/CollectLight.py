@@ -1,4 +1,5 @@
 #coding:utf8
+#收集场景中的灯光布局 用于uniyt中组装
 import os
 import sys
 import codecs

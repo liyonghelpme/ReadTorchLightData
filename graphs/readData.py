@@ -1,4 +1,5 @@
 #coding:utf8
+#读取Graph 中的数据 并且绘制成一个曲线
 import os
 import sys
 import codecs

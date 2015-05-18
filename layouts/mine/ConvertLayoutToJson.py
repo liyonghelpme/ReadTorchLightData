@@ -1,6 +1,6 @@
 #coding:utf8
-#收集粒子效果的 纹理贴图
-#收集每个Layout的效果
+#将Layout 文件转化成Json 文件
+#从json中只提取需要的Props 相关LayoutLink 信息
 import os
 import sys
 import codecs
@@ -93,13 +93,15 @@ def readStack(lineNo):
         lcon = lines[l].encode('utf8')
         if lcon[0] == '<':
             prop, key, value = readProp(lcon)
-            if key == 'DESCRIPTOR' and value == 'Particle':
+            if key == 'DESCRIPTOR' and value == 'Layout Link':
                 isLight = True
-                #layers.append(result)
+                layers.append(result)
                 
-            if key == 'TEXTURE':
+            '''
+            #if key == 'TEXTURE':
                 #lightFiles.add(value)
-                layoutLinks.append(value)
+                #layoutLinks.append(value)
+            '''
 
             result.update(prop)
 
@@ -114,7 +116,7 @@ def readStack(lineNo):
             else:
                 con, l, isLight = readStack(l)
                 if result["stackName"] == "BASEOBJECT" and isLight:
-                    layers.append(result)
+                    #layers.append(result)
                     isLight = False
 
                 result['children'].append(con)
@@ -155,49 +157,9 @@ def trans(cur, func):
 trans(readFile, handleFunc)
 
 
-if not os.path.exists('fbx'):
-    os.mkdir('fbx')
-
-curDir = os.getcwd()
-
-mediaPath = re.compile('media.*')
-
-resDir = mediaPath.sub(curDir, '')
-group = mediaPath.findall(curDir)
-print group
-
-par = curDir.replace(group[0], '')
-print par
-
-#tarDir = os.path.join(curDir, 'fbx')
-tarDir = '/Users/liyong/u3dGame/xuexingDaLu/Assets'
-for png in layoutLinks:
-    fp = par+png
-    srcDir = png.replace('.dds', '.png')
-    realSrc = fp.replace('.dds', '.png')
-    realTar = os.path.join(tarDir, srcDir.replace('media/', './'))
-    print 'srcDir', srcDir
-    print 'realTar', realTar 
-    print 'copyFile###', realTar
-    try:
-        os.mkdirs(os.path.dirname(realTar))
-    except:
-        pass
-    os.system('cp "%s" "%s" ' % (realSrc, realTar))
-
-#print 'allPngs'
-#print json.dumps(layoutLinks, separators=(', ', ': '), indent=4)
-
-def format(s):
-    return json.dumps(s, separators=(', ', ': '), indent=4)
-
-of = open('%s_layers.json' % (readFile), 'w')
-print 'layers'
-mat = format(layers)
-of.write(mat)
-of.close()
-
-#print mat
+print 'len layouts', len(layers)
+wf = open('layers.json', 'w')
+wf.write(json.dumps(layers, separators=(', ', ': '), indent=4))
+wf.close()
 
 
-print json.dumps(layoutLinks, separators=(', ', ': '), indent=4)

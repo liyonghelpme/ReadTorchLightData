@@ -2,6 +2,8 @@
 
 '''
 用于将火炬之光 关卡布局 layout中 特定Layout文件导出为json文件， 用于unity中加载使用
+
+unity读取json 来加载关卡布局
 '''
 import os
 import sys

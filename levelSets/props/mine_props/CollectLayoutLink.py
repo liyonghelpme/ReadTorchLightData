@@ -1,6 +1,8 @@
 #coding:utf8
 #收集粒子效果的 纹理贴图
 #收集每个Layout的效果
+
+#收集地目标 装饰物 的信息
 import os
 import sys
 import codecs

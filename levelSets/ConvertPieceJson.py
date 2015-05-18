@@ -1,6 +1,7 @@
 #coding:utf8
 '''
 生成mine.dat 所有的地图组成块 组件信息转化为 json 文件， 用于unity中加载使用 
+将组成mine的 所有地表组件 的 name 和 对应的guid 对应起来
 '''
 import json
 import re

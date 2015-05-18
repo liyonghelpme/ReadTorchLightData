@@ -1,6 +1,28 @@
 #coding:utf8
-#收集粒子效果的 纹理贴图
-#收集每个Layout的效果
+#将Layout 文件转化成Json 文件
+#从Layout中收集所有的 RoomPieces 对应的 fbx 模型放到unity 对应文件夹里面 去掉重复的 GUID
+
+#mine.dat
+#mineProps.dat
+#props.dat 
+
+'''
+分析上面三个文件 得到GUID --->file 的映射关系
+
+分析layout 文件 得到 去重复的 RoomPieces set 几何
+
+确定Unity 中没有相关的RoomPieces 文件 
+    从对应目录获取fbx文件
+
+输入：
+    三个 .dat  外加一个 layout
+
+输出:
+    RoomPieces
+    guid ---> filename  映射
+
+
+'''
 import os
 import sys
 import codecs
@@ -93,13 +115,15 @@ def readStack(lineNo):
         lcon = lines[l].encode('utf8')
         if lcon[0] == '<':
             prop, key, value = readProp(lcon)
-            if key == 'DESCRIPTOR' and value == 'Particle':
+            if key == 'DESCRIPTOR' and value == 'Layout Link':
                 isLight = True
-                #layers.append(result)
+                layers.append(result)
                 
-            if key == 'TEXTURE':
+            '''
+            #if key == 'TEXTURE':
                 #lightFiles.add(value)
-                layoutLinks.append(value)
+                #layoutLinks.append(value)
+            '''
 
             result.update(prop)
 
@@ -114,7 +138,7 @@ def readStack(lineNo):
             else:
                 con, l, isLight = readStack(l)
                 if result["stackName"] == "BASEOBJECT" and isLight:
-                    layers.append(result)
+                    #layers.append(result)
                     isLight = False
 
                 result['children'].append(con)
@@ -155,49 +179,9 @@ def trans(cur, func):
 trans(readFile, handleFunc)
 
 
-if not os.path.exists('fbx'):
-    os.mkdir('fbx')
-
-curDir = os.getcwd()
-
-mediaPath = re.compile('media.*')
-
-resDir = mediaPath.sub(curDir, '')
-group = mediaPath.findall(curDir)
-print group
-
-par = curDir.replace(group[0], '')
-print par
-
-#tarDir = os.path.join(curDir, 'fbx')
-tarDir = '/Users/liyong/u3dGame/xuexingDaLu/Assets'
-for png in layoutLinks:
-    fp = par+png
-    srcDir = png.replace('.dds', '.png')
-    realSrc = fp.replace('.dds', '.png')
-    realTar = os.path.join(tarDir, srcDir.replace('media/', './'))
-    print 'srcDir', srcDir
-    print 'realTar', realTar 
-    print 'copyFile###', realTar
-    try:
-        os.mkdirs(os.path.dirname(realTar))
-    except:
-        pass
-    os.system('cp "%s" "%s" ' % (realSrc, realTar))
-
-#print 'allPngs'
-#print json.dumps(layoutLinks, separators=(', ', ': '), indent=4)
-
-def format(s):
-    return json.dumps(s, separators=(', ', ': '), indent=4)
-
-of = open('%s_layers.json' % (readFile), 'w')
-print 'layers'
-mat = format(layers)
-of.write(mat)
-of.close()
-
-#print mat
+print 'len layouts', len(layers)
+wf = open('layers.json', 'w')
+wf.write(json.dumps(layers, separators=(', ', ': '), indent=4))
+wf.close()
 
 
-print json.dumps(layoutLinks, separators=(', ', ': '), indent=4)

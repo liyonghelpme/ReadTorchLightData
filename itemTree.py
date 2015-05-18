@@ -1,4 +1,6 @@
 #coding:utf8
+#得到游戏中 所有的单位特性类型 做特性组合 构建新的单位
+
 #解析树状结构文本
 import os
 import re

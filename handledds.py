@@ -1,4 +1,5 @@
 #coding:utf8
+#将dds 转化成 png 图片
 import os
 import re
 import sys
@@ -11,7 +12,7 @@ def tran(cur):
     for i in f:
         name = os.path.join(cur, i)
         if name.find('.dds') != -1:
-            os.system('nconvert -out png %s' % (name))
+            os.system('nconvert -out png "%s" ' % (name))
         elif os.path.isdir(name):
             tran(name)
 

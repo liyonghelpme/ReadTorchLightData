@@ -1,6 +1,8 @@
 #coding:utf8
 '''
 拷贝props 文件夹下面的fbx 文件 到unity 工程的 levelsets/props目录里面
+
+fbx是blender生成的
 '''
 import os
 import sys

@@ -1,6 +1,7 @@
 #coding:utf8
 #读取第一个 .layout文件
 #输出所有的 Props 场景小挂件 layoutLinks
+#用于分析每个场景组件是如何制作的读取配置 在unity自动组装
 
 import os
 import sys
