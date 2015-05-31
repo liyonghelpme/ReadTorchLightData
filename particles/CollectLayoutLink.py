@@ -1,6 +1,10 @@
 #coding:utf8
-#将Layout 文件转化成Json 文件
-#从json中只提取需要的Props 相关LayoutLink 信息
+#收集粒子效果的 纹理贴图
+#收集每个Layout的效果
+'''
+拷贝所有的png
+
+'''
 import os
 import sys
 import codecs
@@ -93,15 +97,13 @@ def readStack(lineNo):
         lcon = lines[l].encode('utf8')
         if lcon[0] == '<':
             prop, key, value = readProp(lcon)
-            if key == 'DESCRIPTOR' and value == 'Layout Link':
+            if key == 'DESCRIPTOR' and value == 'Particle':
                 isLight = True
-                layers.append(result)
+                #layers.append(result)
                 
-            '''
-            #if key == 'TEXTURE':
+            if key == 'TEXTURE':
                 #lightFiles.add(value)
-                #layoutLinks.append(value)
-            '''
+                layoutLinks.append(value)
 
             result.update(prop)
 
@@ -116,7 +118,7 @@ def readStack(lineNo):
             else:
                 con, l, isLight = readStack(l)
                 if result["stackName"] == "BASEOBJECT" and isLight:
-                    #layers.append(result)
+                    layers.append(result)
                     isLight = False
 
                 result['children'].append(con)
@@ -156,13 +158,52 @@ def trans(cur, func):
 
 trans(readFile, handleFunc)
 
+#print json.dumps(layoutLinks, separators=(', ', ': '), indent=4)
 
-print 'len layouts', len(layers)
-wf = open('layers.json', 'w')
-wf.write(json.dumps(layers, separators=(', ', ': '), indent=4))
-wf.close()
-print 'Layout'
-for l in layers:
-    print l["LAYOUT FILE"]
+if not os.path.exists('fbx'):
+    os.mkdir('fbx')
+
+curDir = os.getcwd()
+
+mediaPath = re.compile('media.*')
+
+resDir = mediaPath.sub(curDir, '')
+group = mediaPath.findall(curDir)
+#print group
+
+par = curDir.replace(group[0], '')
+#print par
+
+#tarDir = os.path.join(curDir, 'fbx')
+u3dDir = '/Users/liyong/u3dGame/xuexingDaLu/Assets'
+for png in layoutLinks:
+    fp = os.path.join( par, png).replace('.dds', '.png').replace('\\', '/')
+    u3dFile = png.replace('media', u3dDir).replace('.dds', '.png').replace('\\', '/')
+    tempDir = os.path.dirname(u3dFile)
+    try:
+        os.makedirs(tempDir)
+    except:
+        pass
+    print 'u3dDir ', u3dFile
+    print 'oldFile', fp
+    
+    os.system('cp %s %s ' % (fp,  u3dFile ) )
+    #print fp
+    #os.system('cp %s %s ' % (fp.replace('.dds', '.png'), tarDir))
+
+
+print 'allPngs'
+print json.dumps(layoutLinks, separators=(', ', ': '), indent=4)
+
+def format(s):
+    return json.dumps(s, separators=(', ', ': '), indent=4)
+
+of = open('%s_layers.json' % (readFile), 'w')
+print 'layers'
+mat = format(layers)
+of.write(mat)
+of.close()
+
+#print mat
 
 

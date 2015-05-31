@@ -8,6 +8,7 @@ import os
 import re
 
 levelSets = re.compile('levelsets/.*')
+media = re.compile('media/.*')
 
 u3dHome = '/Users/liyong/u3dGame/xuexingDaLu/Assets' 
 
@@ -32,7 +33,13 @@ def correctPath(oldPath):
         
             
 
+'''
+只实现了拷贝 levelsets 目录里面的模型
+下一步需要拷贝models 目录里面的模型
+'''
 def CopyFile(fn, countNum):
+    #media 目录里面的fbx 目录
+     
     fn = os.path.join('/Users/liyong/Desktop/', fn)
     #print fn
     oldDir = os.path.dirname(fn)
@@ -40,12 +47,16 @@ def CopyFile(fn, countNum):
     fname = os.path.basename(fn).replace('.mesh', '.fbx')
     fbx = os.path.join(dirn, fname)
     
+    #fbx 文件名称
     u3dFName = os.path.join(oldDir, fname)
     #print fbx
-    lv = levelSets.findall(u3dFName)
+    lv = media.findall(u3dFName)
     if len(lv) > 0:
+        #if True:
         #print lv[0]
-        u3dFbx = os.path.join(u3dHome, lv[0])
+        #Assets目录里面的 fbx 文件
+        u3dFbx = os.path.join(u3dHome, lv[0].replace('media/', ''))
+
         #fn = correctPath(fn)
         if fn == None:
             return
@@ -73,6 +84,7 @@ def CopyFile(fn, countNum):
                 pass
             #找到正确的本地文件
             os.system('cp "%s" "%s"' % (fbx, u3dFbx))
+
             if countNum:
                 global fail
                 fail += 1
