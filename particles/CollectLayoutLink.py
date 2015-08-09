@@ -1,6 +1,7 @@
 #coding:utf8
 #收集粒子效果的 纹理贴图
 #收集每个Layout的效果
+#将粒子文件转化为json文件
 '''
 拷贝所有的png
 
@@ -175,7 +176,7 @@ par = curDir.replace(group[0], '')
 #print par
 
 #tarDir = os.path.join(curDir, 'fbx')
-u3dDir = '/Users/liyong/u3dGame/xuexingDaLu/Assets'
+u3dDir = '/Users/liyong/Desktop/allUnity/Assets'
 for png in layoutLinks:
     fp = os.path.join( par, png).replace('.dds', '.png').replace('\\', '/')
     u3dFile = png.replace('media', u3dDir).replace('.dds', '.png').replace('\\', '/')
@@ -187,7 +188,9 @@ for png in layoutLinks:
     print 'u3dDir ', u3dFile
     print 'oldFile', fp
     
-    os.system('cp %s %s ' % (fp,  u3dFile ) )
+    if not os.path.exists(u3dFile): 
+        print 'CopyFile', u3dFile 
+        os.system('cp %s %s ' % (fp,  u3dFile ) )
     #print fp
     #os.system('cp %s %s ' % (fp.replace('.dds', '.png'), tarDir))
 
@@ -198,12 +201,13 @@ print json.dumps(layoutLinks, separators=(', ', ': '), indent=4)
 def format(s):
     return json.dumps(s, separators=(', ', ': '), indent=4)
 
-of = open('%s_layers.json' % (readFile), 'w')
+jf = '%s_layers.json' % (readFile)
+of = open(jf,  'w')
 print 'layers'
 mat = format(layers)
 of.write(mat)
 of.close()
-
+print 'jsonFile', jf
 #print mat
 
 

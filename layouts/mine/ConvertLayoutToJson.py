@@ -1,4 +1,13 @@
 #coding:utf8
+'''
+输入：Layout文件
+输入：Json文件  xxxx.layout.json
+    用于Unity 中MakeScene 使用
+
+参考笔记 场景制作流程:
+    http://note.youdao.com/web/list?notebook=%2F&sortMode=0&note=%2F15AC25FF024C4D1B8A58CB9A4D6803CC%2Fweb1431916754852
+
+'''
 #将Layout 文件转化成Json 文件
 #从json中只提取需要的Props 相关LayoutLink 信息
 import os
@@ -133,6 +142,7 @@ def handleFunc(name):
     lines = codecs.open(name, encoding='utf16').readlines()
     result, l, isLight = readStack(0)
 
+    print 'SaveFile', name+'.json'
     resJson = json.dumps(result, separators=(', ', ': '), indent=4)
     wf = open('%s.json' % (name), 'w')
     wf.write(resJson)
